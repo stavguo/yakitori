@@ -64,7 +64,6 @@ export class Grill extends Scene {
           this.children.bringToTop(gameObject);
           gameObject.lastPos = { x: gameObject.x, y: gameObject.y };
         } else if (gameObject instanceof Customer && this.newSkewer) {
-          this.newSkewer.alpha = 1.0;
           this.newSkewer.x = pointer.x;
           this.newSkewer.y = pointer.y;
           this.newSkewer.setInteractive({ draggable: true });
@@ -85,8 +84,7 @@ export class Grill extends Scene {
         gameObject.x = dragX;
         gameObject.y = dragY;
       }
-      const tint = this.isSkewerPositionValid(gameObject) ? 0x00ff00 : 0xff0000;
-      gameObject.iterate((child) => child.setTint(tint));
+      gameObject.alpha = this.isSkewerPositionValid(gameObject) ? 1 : 0.5;
     });
     this.input.on(
       "dragend",
@@ -106,11 +104,11 @@ export class Grill extends Scene {
             gameObject.x = gameObject.lastPos.x;
             gameObject.y = gameObject.lastPos.y;
           }
-          gameObject.iterate((child) => child.clearTint());
+          gameObject.alpha = 1;
         } else if (gameObject instanceof Customer && this.newSkewer) {
           //  This will bring the selected gameObject to the top of the list
           if (this.isSkewerPositionValid(this.newSkewer)) {
-            this.newSkewer.iterate((child) => child.clearTint());
+            gameObject.alpha = 1;
             this.emitter.emit("orderTaken", this.newSkewer.owner);
           } else {
             this.newSkewer.destroy();
