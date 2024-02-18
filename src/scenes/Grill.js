@@ -11,7 +11,6 @@ export class Grill extends Scene {
     // Events
     {
       this.emitter = new Events.EventEmitter();
-      this.emitter.on("cursorOverCustomer", this.cursorOverCustomer, this);
     }
 
     // Menu and Ingredients
@@ -47,7 +46,7 @@ export class Grill extends Scene {
       //this.graphics.strokeRectShape(customer.getBounds());
     }
 
-    const customer = new Customer(
+    new Customer(
       this,
       Math.Between(16, 256 - 16),
       40,
@@ -121,25 +120,6 @@ export class Grill extends Scene {
       },
       this,
     );
-  }
-
-  cursorOverCustomer(isOver, customer) {
-    if (isOver && customer.orders.length > 0) {
-      this.newSkewer = new Skewer(
-        this,
-        customer,
-        customer.currentOrder(),
-        customer.x,
-        customer.y,
-        this.emitter,
-      );
-      this.newSkewer.alpha = 0.5;
-    } else if (!isOver && customer.orders.length > 0) {
-      if (this.newSkewer) {
-        this.newSkewer.destroy();
-        this.newSkewer = null;
-      }
-    }
   }
 
   isSkewerPositionValid(skewer) {
