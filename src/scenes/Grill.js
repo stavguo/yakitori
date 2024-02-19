@@ -98,7 +98,7 @@ export class Grill extends Scene {
               gameObject.y,
             )
           ) {
-            console.log("you fed someone!");
+            this.emitter.emit("orderFulfilled", gameObject.owner);
             gameObject.destroy();
           } else if (!this.isSkewerPositionValid(gameObject)) {
             gameObject.x = gameObject.lastPos.x;
