@@ -86,7 +86,7 @@ export class Grill extends Scene {
         gameObject.x = dragX;
         gameObject.y = dragY;
       }
-      gameObject.alpha = this.isSkewerPositionValid(gameObject) ? 1 : 0.5;
+      gameObject.alpha = gameObject.isSkewerPositionValid() ? 1 : 0.5;
     });
     this.input.on(
       "dragend",
@@ -102,15 +102,14 @@ export class Grill extends Scene {
           ) {
             this.emitter.emit("orderFulfilled", gameObject.owner);
             gameObject.destroy();
-          } else if (!this.isSkewerPositionValid(gameObject)) {
+          } else if (!gameObject.isSkewerPositionValid()) {
             gameObject.x = gameObject.lastPos.x;
             gameObject.y = gameObject.lastPos.y;
           }
           gameObject.alpha = 1;
         } else if (gameObject instanceof Customer && this.newSkewer) {
           //  This will bring the selected gameObject to the top of the list
-          if (this.isSkewerPositionValid(this.newSkewer)) {
-            gameObject.alpha = 1;
+          if (this.newSkewer.isSkewerPositionValid()) {
             this.emitter.emit("orderTaken", this.newSkewer.owner);
           } else {
             this.newSkewer.destroy();
@@ -152,33 +151,5 @@ export class Grill extends Scene {
     for (let i = 0; i < startingCustomers; i++) {
       this.addCustomer();
     }
-  }
-
-  isSkewerPositionValid(skewer) {
-    // TODO: Clean this up
-    const skewerRect = new Geom.Rectangle(
-      skewer.x - skewer.width / 2,
-      skewer.y - (skewer.height - 14) / 2,
-      skewer.width,
-      skewer.height - 14,
-    );
-    // this.graphics.strokeRectShape(skewerRect);
-    const grillRect = new Geom.Rectangle(
-      this.grill.x - this.grill.width / 2,
-      this.grill.y - this.grill.height / 2,
-      this.grill.width,
-      this.grill.height,
-    );
-    // this.graphics.strokeRectShape(grillRect);
-    const selected = this.physics.overlapRect(
-      skewerRect.x,
-      skewerRect.y,
-      skewerRect.width,
-      skewerRect.height,
-    );
-    return (
-      Geom.Rectangle.ContainsRect(grillRect, skewerRect) &&
-      selected.length === 1
-    );
   }
 }
