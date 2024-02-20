@@ -61,6 +61,7 @@ export class Customer extends GameObjects.Sprite {
     if (owner === this) {
       this.fulfilledOrders += 1;
       if (this.fulfilledOrders === this.totalOrders) {
+        this.emitter.emit("leftSpot", Object.assign({}, this.x));
         this.destroy();
       }
     }
