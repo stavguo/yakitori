@@ -1,5 +1,6 @@
-import { Events, Geom, Math, Scene } from "phaser";
+import { Events, Geom, Scene } from "phaser";
 import { Customer } from "../components/Customer.js";
+import { Rush } from "../components/Rush.js";
 import { Skewer } from "../components/Skewer.js";
 
 export class Grill extends Scene {
@@ -46,14 +47,10 @@ export class Grill extends Scene {
       //this.graphics.strokeRectShape(customer.getBounds());
     }
 
-    new Customer(
-      this,
-      Math.Between(16, 256 - 16),
-      40,
-      "customer1",
-      [0, 0, 0],
-      this.emitter,
-    );
+    // Game loop
+    {
+      new Rush(this, this.emitter, this.menuMap, 1, 3, 1, 5, 10000, 30000);
+    }
 
     // Set up drag listeners
     this.input.on(
