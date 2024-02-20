@@ -1,6 +1,5 @@
-import { Events, Geom, Scene } from "phaser";
+import { Events, Geom, Math, Scene, Utils } from "phaser";
 import { Customer } from "../components/Customer.js";
-import { Rush } from "../components/Rush.js";
 import { Skewer } from "../components/Skewer.js";
 
 export class Grill extends Scene {
@@ -12,6 +11,16 @@ export class Grill extends Scene {
     // Events
     {
       this.emitter = new Events.EventEmitter();
+      this.maxCustomers = 5;
+      this.minTime = 5000;
+      this.maxTime = 15000;
+      this.timeUntilNextCustomer = Math.Between(this.minTime, this.maxTime);
+      const range = (start, stop, step) =>
+        Array.from(
+          { length: (stop - start) / step + 1 },
+          (_, i) => start + i * step,
+        );
+      this.availableSpots = range(16, 256 - 16, 32);
     }
 
     // Menu and Ingredients
@@ -45,11 +54,7 @@ export class Grill extends Scene {
         lineStyle: { color: 0xaa0000 },
       });
       //this.graphics.strokeRectShape(customer.getBounds());
-    }
-
-    // Game loop
-    {
-      new Rush(this, this.emitter, this.menuMap, 1, 3, 1, 5, 10000, 30000);
+      this.addMultipleCustomers();
     }
 
     // Set up drag listeners
@@ -115,6 +120,38 @@ export class Grill extends Scene {
       },
       this,
     );
+  }
+
+  update(t, dt) {
+    this.timeUntilNextCustomer -= dt;
+    if (this.timeUntilNextCustomer < 0) {
+      this.timeUntilNextCustomer = Math.Between(this.minTime, this.maxTime);
+      if (8 - this.availableSpots.length < this.maxCustomers) {
+        this.addCustomer();
+      }
+    }
+    if (this.availableSpots.length == 8) {
+      this.addMultipleCustomers();
+    }
+  }
+
+  addCustomer() {
+    Utils.Array.Shuffle(this.availableSpots);
+    new Customer(
+      this,
+      this.availableSpots.pop(),
+      40,
+      "customer1",
+      [0, 0, 0],
+      this.emitter,
+    );
+  }
+
+  addMultipleCustomers() {
+    const startingCustomers = Math.Between(1, this.maxCustomers);
+    for (let i = 0; i < startingCustomers; i++) {
+      this.addCustomer();
+    }
   }
 
   isSkewerPositionValid(skewer) {
