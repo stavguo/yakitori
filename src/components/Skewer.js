@@ -5,14 +5,38 @@ export class Skewer extends GameObjects.Container {
     super(scene, posX, posY);
     this.scene = scene;
     this.owner = owner;
+    this.emitter = emitter;
     this.lastPos = { x: null, y: null };
-    const skewerSprite = scene.add.image(0, 0, "skewer");
+
+    // Sprite Setup
+    const skewerSprite = this.scene.add.image(0, 0, "skewer");
     this.add(skewerSprite);
     this.setSize(skewerSprite.width, skewerSprite.height);
-    scene.physics.add.existing(this);
 
-    this.emitter = emitter;
-    scene.add.existing(this);
+    // Listener Setup
+    this.on("dragstart", () => {
+      this.scene.children.bringToTop(this);
+      this.lastPos = { x: this.x, y: this.y };
+    });
+    this.on("drag", (_, dragX, dragY) => {
+      this.x = dragX;
+      this.y = dragY;
+      this.alpha = this.isSkewerPositionValid() ? 1 : 0.5;
+    });
+    this.on("dragend", () => {
+      if (Geom.Rectangle.Contains(this.owner.getBounds(), this.x, this.y)) {
+        this.emitter.emit("orderFulfilled", this.owner);
+        this.destroy();
+      } else if (!this.isSkewerPositionValid()) {
+        this.x = this.lastPos.x;
+        this.y = this.lastPos.y;
+      }
+      this.alpha = 1;
+    });
+
+    // Add to scene
+    this.scene.add.existing(this);
+    this.scene.physics.add.existing(this);
   }
 
   isSkewerPositionValid() {

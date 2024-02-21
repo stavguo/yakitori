@@ -1,6 +1,5 @@
-import { Events, Geom, Math, Scene, Utils } from "phaser";
+import { Events, Math, Scene, Utils } from "phaser";
 import { Customer } from "../components/Customer.js";
-import { Skewer } from "../components/Skewer.js";
 
 export class Grill extends Scene {
   constructor() {
@@ -49,76 +48,13 @@ export class Grill extends Scene {
     // Scene Setup
     {
       this.grill = this.add.image(128, 96, "grill").setOrigin(0.5, 0.5);
-      this.graphics = this.add.graphics({
-        fillStyle: { color: 0x0000aa },
-        lineStyle: { color: 0xaa0000 },
-      });
+      // this.graphics = this.add.graphics({
+      //   fillStyle: { color: 0x0000aa },
+      //   lineStyle: { color: 0xaa0000 },
+      // });
       //this.graphics.strokeRectShape(customer.getBounds());
       this.addMultipleCustomers();
     }
-
-    // Set up drag listeners
-    this.input.on(
-      "dragstart",
-      function (pointer, gameObject) {
-        if (gameObject instanceof Skewer) {
-          //  This will bring the selected gameObject to the top of the list
-          this.children.bringToTop(gameObject);
-          gameObject.lastPos = { x: gameObject.x, y: gameObject.y };
-        } else if (gameObject instanceof Customer && this.newSkewer) {
-          this.newSkewer.x = pointer.x;
-          this.newSkewer.y = pointer.y;
-          this.newSkewer.setInteractive({ draggable: true });
-          this.input.setDraggable(this.newSkewer);
-        }
-      },
-      this,
-    );
-    this.input.on("drag", (pointer, gameObject, dragX, dragY) => {
-      if (gameObject instanceof Customer) {
-        if (!this.newSkewer) {
-          return;
-        }
-        gameObject = this.newSkewer;
-        gameObject.x = pointer.x;
-        gameObject.y = pointer.y;
-      } else {
-        gameObject.x = dragX;
-        gameObject.y = dragY;
-      }
-      gameObject.alpha = gameObject.isSkewerPositionValid() ? 1 : 0.5;
-    });
-    this.input.on(
-      "dragend",
-      function (pointer, gameObject) {
-        if (gameObject instanceof Skewer) {
-          //  This will bring the selected gameObject to the top of the list
-          if (
-            Geom.Rectangle.Contains(
-              gameObject.owner.getBounds(),
-              gameObject.x,
-              gameObject.y,
-            )
-          ) {
-            this.emitter.emit("orderFulfilled", gameObject.owner);
-            gameObject.destroy();
-          } else if (!gameObject.isSkewerPositionValid()) {
-            gameObject.x = gameObject.lastPos.x;
-            gameObject.y = gameObject.lastPos.y;
-          }
-          gameObject.alpha = 1;
-        } else if (gameObject instanceof Customer && this.newSkewer) {
-          //  This will bring the selected gameObject to the top of the list
-          if (this.newSkewer.isSkewerPositionValid()) {
-            this.emitter.emit("orderTaken", this.newSkewer.owner);
-          } else {
-            this.newSkewer.destroy();
-          }
-          this.newSkewer = null;
-        }
-      },
-      this,
-    );
   }
 
   update(t, dt) {
