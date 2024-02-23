@@ -1,0 +1,90 @@
+{
+  "momo": {
+    "japanese": "もも",
+    "description": "chicken thigh",
+    "ingredients": [
+      {
+        "texture": "thigh",
+        "yPos": -24
+      },
+      {
+        "texture": "thigh",
+        "yPos": -8
+      },
+      {
+        "texture": "thigh",
+        "yPos": 8
+      }
+    ],
+    "cookTime": 10000,
+    "burnTime": 5000
+  },
+  "mune": {
+    "japanese": "むね",
+    "description": "chicken breast"
+  },
+  "hasami": {
+    "japanese": "はさみ",
+    "description": "gizzard and spring onion"
+  },
+  "sasami": {
+    "japanese": "ささみ",
+    "description": "inner breast meat or \"tender\""
+  },
+  "negima": {
+    "japanese": "ねぎま",
+    "description": "chicken and spring onion"
+  },
+  "tsukune": {
+    "japanese": "つくね",
+    "description": "chicken meatballs"
+  },
+  "(tori)kawa": {
+    "japanese": "(とり)かわ",
+    "description": "chicken skin, grilled until crispy"
+  },
+  "tebasaki": {
+    "japanese": "手羽先",
+    "description": "chicken wing"
+  },
+  "bonjiri": {
+    "japanese": "ぼんじり",
+    "description": "chicken tail"
+  },
+  "shiro": {
+    "japanese": "シロ",
+    "description": "chicken small intestines"
+  },
+  "nankotsu": {
+    "japanese": "なんこつ",
+    "description": "chicken cartilage"
+  },
+  "hāto / hatsu": {
+    "japanese": "ハート / ハツ",
+    "description": "or kokoro (こころ), chicken heart"
+  },
+  "rebā": {
+    "japanese": "レバー",
+    "description": "liver"
+  },
+  "shiro rebā": {
+    "japanese": "白レバー",
+    "description": "fatty liver"
+  },
+  "sunagimo": {
+    "japanese": "砂肝",
+    "description": "or zuri (ずり), chicken gizzard"
+  },
+  "toriniku": {
+    "japanese": "鶏肉",
+    "description": "all white meat on skewer"
+  },
+  "yotsumi": {
+    "japanese": "四つ身",
+    "description": "pieces of chicken breast"
+  },
+  "seseri": {
+    "japanese": "せせり",
+    "description": "chicken neck meat"
+  }
+}

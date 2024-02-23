@@ -29,11 +29,15 @@ export class Preloader extends Scene {
     this.load.image("grill", "grill.png");
     this.load.image("logo", "logo.png");
     this.load.image("skewer", "skewer.png");
-    this.load.spritesheet("raw", "raw_sheet.png", {
+    this.load.spritesheet("thigh_raw", "thigh_raw.png", {
       frameWidth: 16,
       frameHeight: 16,
     });
-    this.load.spritesheet("cooked", "cooked_sheet.png", {
+    this.load.spritesheet("thigh_cooked", "thigh_cooked.png", {
+      frameWidth: 16,
+      frameHeight: 16,
+    });
+    this.load.spritesheet("thigh_burnt", "thigh_burnt.png", {
       frameWidth: 16,
       frameHeight: 16,
     });
@@ -41,6 +45,10 @@ export class Preloader extends Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
+    // load data
+    this.load.setPath("src/data");
+    this.load.json("menu", "menu.json");
+    this.load.json("ingredients", "ingredients.json");
   }
 
   create() {

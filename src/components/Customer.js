@@ -47,6 +47,7 @@ export class Customer extends GameObjects.Sprite {
       if (this.newSkewer) {
         //  This will bring the selected gameObject to the top of the list
         if (this.newSkewer.isSkewerPositionValid()) {
+          this.newSkewer.cook();
           this.emitter.emit("orderTaken", this.newSkewer.owner);
         } else {
           this.newSkewer.destroy();

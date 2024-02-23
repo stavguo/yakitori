@@ -1,19 +1,26 @@
-import { GameObjects, Geom, Scene } from "phaser";
+import { GameObjects, Geom, Utils } from "phaser";
 
 export class Skewer extends GameObjects.Container {
   constructor(scene, owner, type, posX, posY, emitter) {
     super(scene, posX, posY);
     this.scene = scene;
     this.owner = owner;
+    this.type = type;
     this.emitter = emitter;
     this.lastPos = { x: null, y: null };
+    this.cookTween = null;
+    this.ingredientData = scene.cache.json.get("ingredients");
 
     // Sprite Setup
-    const skewerSprite = this.scene.add.image(0, 0, "skewer");
-    this.add(skewerSprite);
-    this.setSize(skewerSprite.width, skewerSprite.height);
+    this.createSkewer();
 
     // Listener Setup
+    this.on("pointerdown", () => {
+      if (this.cookTween !== null) this.cookTween.pause();
+    });
+    this.on("pointerup", () => {
+      if (this.cookTween !== null) this.cookTween.resume();
+    });
     this.on("dragstart", () => {
       this.scene.children.bringToTop(this);
       this.lastPos = { x: this.x, y: this.y };
@@ -37,6 +44,46 @@ export class Skewer extends GameObjects.Container {
     // Add to scene
     this.scene.add.existing(this);
     this.scene.physics.add.existing(this);
+  }
+
+  cook() {
+    // Loop over last couple sprites in container
+    this.cookTween = this.scene.add.tween({
+      targets: this.list[this.list.length - 1],
+      alpha: { value: 0, duration: this.type.cookTime, ease: "Power1" },
+      repeat: 0,
+      onComplete: () => {
+        this.cookTween = this.scene.add.tween({
+          targets: this.list[this.list.length - 2],
+          alpha: { value: 0, duration: this.type.burnTime, ease: "Power1" },
+          repeat: 0,
+          onComplete: () => {
+            this.cookTween = null;
+          },
+        });
+      },
+    });
+  }
+
+  createSkewer() {
+    const skewerSprite = this.scene.add.sprite(0, 0, "skewer");
+    this.add(skewerSprite);
+    const randomFrames = Utils.Array.Shuffle([0, 1, 2]);
+    ["burnt", "cooked", "raw"].forEach((state) => {
+      const container = this.scene.add.container(0, 0);
+      this.type["ingredients"].forEach((ingred, index) => {
+        const rawTexture = this.ingredientData[ingred["texture"]][state];
+        const ingredSprite = this.scene.add.sprite(
+          0,
+          ingred["yPos"],
+          rawTexture,
+          randomFrames[index],
+        );
+        container.add(ingredSprite);
+      });
+      this.add(container);
+    });
+    this.setSize(skewerSprite.width, skewerSprite.height);
   }
 
   isSkewerPositionValid() {

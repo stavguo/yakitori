@@ -1,0 +1,7 @@
+{
+  "thigh": {
+    "raw": "thigh_raw",
+    "cooked": "thigh_cooked",
+    "burnt": "thigh_burnt"
+  }
+}

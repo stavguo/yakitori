@@ -6,6 +6,19 @@ export class Grill extends Scene {
     super("Grill");
   }
 
+  preload() {
+    // Data
+    this.menu = this.cache.json.get("menu");
+    // Animations
+    this.anims.create({
+      key: "thigh_raw",
+      frames: this.anims.generateFrameNumbers("thigh_raw", {
+        start: 0,
+        end: 2,
+      }),
+    });
+  }
+
   create() {
     // Events
     {
@@ -20,29 +33,6 @@ export class Grill extends Scene {
           (_, i) => start + i * step,
         );
       this.availableSpots = range(16, 256 - 16, 32);
-    }
-
-    // Menu and Ingredients
-    {
-      this.ingredientList = [
-        {
-          // 0
-          name: "raw chicken ball",
-          texture: "raw",
-          height: 16,
-        },
-      ];
-      this.menuObject = {
-        0: {
-          name: "test",
-          ingredients: [
-            this.ingredientList[0],
-            this.ingredientList[0],
-            this.ingredientList[0],
-          ],
-        },
-      };
-      this.menuMap = new Map(Object.entries(this.menuObject));
     }
 
     // Scene Setup
@@ -77,7 +67,7 @@ export class Grill extends Scene {
       this.availableSpots.pop(),
       40,
       "customer1",
-      [0, 0, 0],
+      [this.menu["momo"], this.menu["momo"], this.menu["momo"]],
       this.emitter,
     );
   }
