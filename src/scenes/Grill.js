@@ -17,6 +17,13 @@ export class Grill extends Scene {
         end: 2,
       }),
     });
+    this.anims.create({
+      key: "fingers",
+      frames: this.anims.generateFrameNumbers("fingers", {
+        start: 0,
+        end: 4,
+      }),
+    });
   }
 
   create() {
@@ -44,6 +51,11 @@ export class Grill extends Scene {
       // });
       //this.graphics.strokeRectShape(customer.getBounds());
       this.addMultipleCustomers();
+    }
+
+    // UI Setup
+    {
+      this.ui = this.add.bitmapText(2, -3, "eighties", `$${123456789}`, 12);
     }
   }
 

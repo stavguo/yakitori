@@ -45,6 +45,15 @@ export class Preloader extends Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
+    this.load.spritesheet("fingers", "fingers_sheet.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
+    this.load.bitmapFont(
+      "eighties",
+      "eighties-v1/eighties_0.png",
+      "eighties-v1/eighties.fnt",
+    );
     // load data
     this.load.setPath("src/data");
     this.load.json("menu", "menu.json");
