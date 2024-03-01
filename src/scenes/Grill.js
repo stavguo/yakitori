@@ -44,7 +44,20 @@ export class Grill extends Scene {
 
     // Scene Setup
     {
-      this.grill = this.add.image(128, 96, "grill").setOrigin(0.5, 0.5);
+      this.grill = this.add
+        .image(128, 96, "grill")
+        .setOrigin(0.5, 0.5)
+        .setInteractive();
+      this.grill.on("pointerover", () => {
+        this.emitter.emit("pointeroutCustomerZone");
+      });
+      const customerZone = this.add
+        .zone(128, 28, 256, 56)
+        .setOrigin(0.5)
+        .setInteractive();
+      customerZone.on("pointerover", () =>
+        this.emitter.emit("pointeroverCustomerZone"),
+      );
       // this.graphics = this.add.graphics({
       //   fillStyle: { color: 0x0000aa },
       //   lineStyle: { color: 0xaa0000 },

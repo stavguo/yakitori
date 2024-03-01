@@ -10,7 +10,9 @@ export class Customer extends GameObjects.Sprite {
     this.totalOrders = orders.length;
     this.fulfilledOrders = 0;
     this.emitter = emitter;
-    this.fingers = scene.add.sprite(posX, posY, "fingers", this.totalOrders);
+    this.fingers = scene.add
+      .sprite(posX, posY, "fingers", this.totalOrders)
+      .setVisible(false);
 
     // Sprite Setup
     if (posX > 256 / 2) {
@@ -20,9 +22,25 @@ export class Customer extends GameObjects.Sprite {
     this.setInteractive({ draggable: true });
     this.setOrigin(0.5, 0.5);
 
-    // Listener Setup
+    // Event Setup
     this.emitter.on("orderTaken", this.orderTaken, this);
     this.emitter.on("orderFulfilled", this.orderFulfilled, this);
+    this.emitter.on(
+      "pointeroverCustomerZone",
+      () => this.fingers.setVisible(true),
+      this,
+    );
+    this.emitter.on(
+      "pointeroutCustomerZone",
+      () => {
+        this.fingers.setVisible(false);
+      },
+      this,
+    );
+
+    // Listener Setup
+    this.on("pointerover", () => this.emitter.emit("pointeroverCustomerZone"));
+    // this.on("pointerout", () => this.emitter.emit("pointeroutCustomerZone"));
     this.on("dragstart", (pointer) => {
       if (this.orderQueue.length > 0) {
         this.newSkewer = new Skewer(
@@ -56,6 +74,7 @@ export class Customer extends GameObjects.Sprite {
         }
         this.newSkewer = null;
       }
+      this.emitter.emit("pointeroutCustomerZone");
     });
   }
 

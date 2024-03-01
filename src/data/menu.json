@@ -1,29 +1,18 @@
 {
-  "momo": {
+  "0": {
+    "0": "momo",
     "japanese": "もも",
     "description": "chicken thigh",
-    "ingredients": [
-      {
-        "texture": "thigh",
-        "yPos": -24
-      },
-      {
-        "texture": "thigh",
-        "yPos": -8
-      },
-      {
-        "texture": "thigh",
-        "yPos": 8
-      }
-    ],
     "cookTime": 10000,
     "burnTime": 5000
   },
-  "mune": {
+  "1": {
+    "english": "mune",
     "japanese": "むね",
     "description": "chicken breast"
   },
-  "hasami": {
+  "2": {
+    "enlish": "hasami",
     "japanese": "はさみ",
     "description": "gizzard and spring onion"
   },

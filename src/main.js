@@ -3,7 +3,7 @@ import * as Phaser from "phaser";
 import { Boot } from "./scenes/Boot.js";
 import { GameOver } from "./scenes/GameOver.js";
 import { Grill } from "./scenes/Grill.js";
-// import { Main } from "./scenes/Main.js";
+import { Main } from "./scenes/Main.js";
 import { MainMenu } from "./scenes/MainMenu.js";
 import { Preloader } from "./scenes/Preloader.js";
 
@@ -27,7 +27,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [Boot, Preloader, MainMenu, Grill, GameOver],
+  scene: [Boot, Preloader, MainMenu, Main, Grill, GameOver],
 };
 
 export default new Phaser.Game(config);

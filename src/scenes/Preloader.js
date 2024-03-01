@@ -29,6 +29,9 @@ export class Preloader extends Scene {
     this.load.image("grill", "grill.png");
     this.load.image("logo", "logo.png");
     this.load.image("skewer", "skewer.png");
+    this.load.image("momo_raw", "momo_raw.png");
+    this.load.image("speech_bubble", "speech_bubble.png");
+    this.load.image("crosshair", "crosshair.png");
     this.load.spritesheet("thigh_raw", "thigh_raw.png", {
       frameWidth: 16,
       frameHeight: 16,
@@ -58,6 +61,7 @@ export class Preloader extends Scene {
     this.load.setPath("src/data");
     this.load.json("menu", "menu.json");
     this.load.json("ingredients", "ingredients.json");
+    this.load.json("textures", "textures.json");
   }
 
   create() {
