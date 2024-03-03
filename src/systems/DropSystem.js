@@ -5,9 +5,11 @@ import {
   defineSystem,
   enterQuery,
   exitQuery,
+  hasComponent,
   removeComponent,
   removeEntity,
 } from "bitecs";
+import { Customer } from "../components/Customer.js";
 import { Draggable } from "../components/Draggable.js";
 import { Droppable } from "../components/Droppable.js";
 import { Interactive } from "../components/Interactive.js";
@@ -31,17 +33,6 @@ const createSkewer = (world, zoneId) => {
   addComponent(world, Droppable, skewer1);
 };
 
-const deleteOrder = (world, eid, gameObjectById) => {
-  const container = gameObjectById.get(eid);
-  container.each((gameObject) => {
-    removeEntity(world, gameObject.name);
-    gameObject.destroy();
-  });
-  removeEntity(world, eid);
-  container.destroy();
-  gameObjectById.delete(eid);
-};
-
 export const createDropSystem = (scene, gameObjectById) => {
   const OrderQuery = defineQuery([Droppable, Order]);
   const SkewerQuery = defineQuery([Droppable, Skewer]);
@@ -54,16 +45,22 @@ export const createDropSystem = (scene, gameObjectById) => {
       const gameObject = gameObjectById.get(eid);
       gameObject.on("drop", (pointer, target) => {
         createSkewer(world, target.name);
-        deleteOrder(world, eid, gameObjectById);
+        removeEntity(world, eid);
       });
     });
     SkewerQueryEnter(world).forEach((eid) => {
       const gameObject = gameObjectById.get(eid);
       gameObject.on("drop", (pointer, target) => {
-        Position.x[eid] = target.x - 8;
-        Position.y[eid] = target.y - 40;
-        gameObject.removeListener("dragend");
-        removeComponent(world, Returnable, eid);
+        // TODO: Check if target has component
+        if (hasComponent(world, Customer, target.name)) {
+          console.log(`You gave customer: ${target.name} their food!`);
+          removeEntity(world, eid);
+        } else {
+          Position.x[eid] = target.x - 8;
+          Position.y[eid] = target.y - 40;
+          gameObject.removeListener("dragend");
+          removeComponent(world, Returnable, eid);
+        }
       });
     });
     DroppableExitQuery(world).forEach((eid) => {
