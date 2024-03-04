@@ -14,6 +14,10 @@ import { createSetInteractiveSystem } from "../systems/SetInteractiveSystem.js";
 import { createSpriteSystem } from "../systems/SpriteSystem.js";
 import { createTextSystem } from "../systems/TextSystem.js";
 import { createZoneSystem } from "../systems/ZoneSystem.js";
+import { createCookingSystem } from "../systems/CookingSystem.js";
+import { Score } from "../components/Score.js";
+import { MenuText } from "../components/MenuText.js";
+import { createScoreSystem } from "../systems/ScoreSystem.js";
 
 export class Main extends Scene {
   constructor() {
@@ -23,6 +27,9 @@ export class Main extends Scene {
   create() {
     // Create globals
     this.world = createWorld();
+    this.world.time = {
+      then: performance.now(),
+    };
     this.gameObjectById = new Map();
 
     this.graphics = this.add.graphics({
@@ -38,6 +45,15 @@ export class Main extends Scene {
     addComponent(this.world, Sprite, grill);
     Sprite.texture[grill] = 0;
     Sprite.frame[grill] = 0;
+
+    const score = addEntity(this.world);
+    addComponent(this.world, Score, score);
+    addComponent(this.world, Position, score);
+    Position.x[score] = 2;
+    Position.y[score] = -3;
+    addComponent(this.world, MenuText, score);
+    MenuText.item[score] = 0;
+    MenuText.field[score] = 0;
 
     // Make grill slot entities
     for (let i = 0; i < 256; i += 16) {
@@ -79,6 +95,8 @@ export class Main extends Scene {
     this.returnSystem = createReturnSystem(this, this.gameObjectById);
     this.dropSystem = createDropSystem(this, this.gameObjectById);
     this.customerSystem = createCustomerSystem(this, this.gameObjectById);
+    this.cookingSystem = createCookingSystem(this, this.gameObjectById);
+    this.scoreSystem = createScoreSystem(this.gameObjectById);
   }
 
   update(t, dt) {
@@ -96,6 +114,8 @@ export class Main extends Scene {
 
     // Gameplay
     this.customerSystem(this.world);
+    this.cookingSystem(this.world);
+    this.scoreSystem(this.world);
     if (!this.world) {
       return;
     }

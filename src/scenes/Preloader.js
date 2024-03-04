@@ -25,30 +25,14 @@ export class Preloader extends Scene {
   preload() {
     //  Load the assets for the game - Replace with your own assets
     this.load.setPath("assets");
-
+    ``;
     this.load.image("grill", "grill.png");
-    this.load.image("logo", "logo.png");
     this.load.image("skewer", "skewer.png");
     this.load.image("momo_raw", "momo_raw.png");
+    this.load.image("momo_cooked", "momo_cooked.png");
     this.load.image("speech_bubble", "speech_bubble.png");
     this.load.image("crosshair", "crosshair.png");
-    this.load.spritesheet("thigh_raw", "thigh_raw.png", {
-      frameWidth: 16,
-      frameHeight: 16,
-    });
-    this.load.spritesheet("thigh_cooked", "thigh_cooked.png", {
-      frameWidth: 16,
-      frameHeight: 16,
-    });
-    this.load.spritesheet("thigh_burnt", "thigh_burnt.png", {
-      frameWidth: 16,
-      frameHeight: 16,
-    });
     this.load.spritesheet("customer1", "customer_1_sheet.png", {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
-    this.load.spritesheet("fingers", "fingers_sheet.png", {
       frameWidth: 32,
       frameHeight: 32,
     });
@@ -60,7 +44,6 @@ export class Preloader extends Scene {
     // load data
     this.load.setPath("src/data");
     this.load.json("menu", "menu.json");
-    this.load.json("ingredients", "ingredients.json");
     this.load.json("textures", "textures.json");
   }
 

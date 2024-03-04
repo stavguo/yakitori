@@ -16,6 +16,7 @@ export const createTextSystem = (scene, gameObjectById) => {
         menuMap[MenuText.item[eid]][MenuText.field[eid]],
         12,
       );
+      text.setTint(0x000000, 0x000000, 0x000000, 0x000000);
       text.name = eid;
       gameObjectById.set(eid, text);
       if (hasComponent(world, PartOfContainer, eid)) {

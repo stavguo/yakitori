@@ -8,10 +8,8 @@ export class MainMenu extends Scene {
   create() {
     this.add.image(128, 96, "background");
 
-    this.add.image(128, 32, "logo");
-
     this.add
-      .text(128, 96, "Main Menu", {
+      .text(128, 96, "Start", {
         fontFamily: "Arial Black",
         fontSize: 12,
         color: "#ffffff",

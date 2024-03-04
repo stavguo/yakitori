@@ -17,7 +17,9 @@ export const createDragSystem = (scene, gameObjectById) => {
     gameObjectQueryEnter(world).forEach((eid) => {
       const gameObject = gameObjectById.get(eid);
       scene.input.setDraggable(gameObject);
-      //scene.input.enableDebug(gameObject);
+      if (scene.physics.world.drawDebug) {
+        scene.input.enableDebug(gameObject);
+      }
       gameObject.on("dragstart", () => {
         addComponent(world, Returnable, eid);
       });

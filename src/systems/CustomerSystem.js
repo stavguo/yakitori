@@ -19,6 +19,42 @@ import { Size } from "../components/Size.js";
 import { Sprite } from "../components/Sprite.js";
 import { Zone } from "../components/Zone.js";
 
+const makeOrder = (world, xPos, yPos) => {
+  const order1 = addEntity(world);
+  addComponent(world, Order, order1);
+  addComponent(world, Container, order1);
+  addComponent(world, Position, order1);
+  Position.x[order1] = xPos + 16;
+  Position.y[order1] = yPos + 6;
+  addComponent(world, Size, order1);
+  Size.width[order1] = 32;
+  Size.height[order1] = 12;
+  addComponent(world, Interactive, order1);
+  addComponent(world, Draggable, order1);
+  addComponent(world, Droppable, order1);
+  addComponent(world, Returnable, order1);
+
+  const speechBubble1 = addEntity(world);
+  addComponent(world, Position, speechBubble1);
+  Position.x[speechBubble1] = -16;
+  Position.y[speechBubble1] = -6;
+  addComponent(world, Sprite, speechBubble1);
+  Sprite.texture[speechBubble1] = 2;
+  Sprite.frame[speechBubble1] = 0;
+  addComponent(world, PartOfContainer, speechBubble1);
+  PartOfContainer.eid[speechBubble1] = order1;
+
+  const orderText1 = addEntity(world);
+  addComponent(world, Position, orderText1);
+  Position.x[orderText1] = 3 - 16;
+  Position.y[orderText1] = -4 - 6;
+  addComponent(world, MenuText, orderText1);
+  MenuText.item[orderText1] = 0;
+  MenuText.field[orderText1] = 0;
+  addComponent(world, PartOfContainer, orderText1);
+  PartOfContainer.eid[orderText1] = order1;
+};
+
 export const createCustomerSystem = (scene, gameObjectById) => {
   const customerQuery = defineQuery([Customer]);
   const customerQueryEnter = enterQuery(customerQuery);
@@ -53,39 +89,9 @@ export const createCustomerSystem = (scene, gameObjectById) => {
       addComponent(world, PartOfContainer, eid);
       PartOfContainer.eid[eid] = customer1;
 
-      const order1 = addEntity(world);
-      addComponent(world, Order, order1);
-      addComponent(world, Container, order1);
-      addComponent(world, Position, order1);
-      Position.x[order1] = 24 + 16;
-      Position.y[order1] = 16 + 6;
-      addComponent(world, Size, order1);
-      Size.width[order1] = 32;
-      Size.height[order1] = 12;
-      addComponent(world, Interactive, order1);
-      addComponent(world, Draggable, order1);
-      addComponent(world, Droppable, order1);
-      addComponent(world, Returnable, order1);
-
-      const speechBubble1 = addEntity(world);
-      addComponent(world, Position, speechBubble1);
-      Position.x[speechBubble1] = -16;
-      Position.y[speechBubble1] = -6;
-      addComponent(world, Sprite, speechBubble1);
-      Sprite.texture[speechBubble1] = 2;
-      Sprite.frame[speechBubble1] = 0;
-      addComponent(world, PartOfContainer, speechBubble1);
-      PartOfContainer.eid[speechBubble1] = order1;
-
-      const orderText1 = addEntity(world);
-      addComponent(world, Position, orderText1);
-      Position.x[orderText1] = 3 - 16;
-      Position.y[orderText1] = -4 - 6;
-      addComponent(world, MenuText, orderText1);
-      MenuText.item[orderText1] = 0;
-      MenuText.field[orderText1] = 0;
-      addComponent(world, PartOfContainer, orderText1);
-      PartOfContainer.eid[orderText1] = order1;
+      makeOrder(world, 24, 16);
+      makeOrder(world, 24, 16);
+      makeOrder(world, 24, 16);
     });
   });
 };
