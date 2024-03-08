@@ -7,14 +7,11 @@ import {
 } from "bitecs";
 import { Container } from "../components/Container.js";
 import { Customer } from "../components/Customer.js";
-import { Draggable } from "../components/Draggable.js";
-import { Droppable } from "../components/Droppable.js";
-import { Interactive } from "../components/Interactive.js";
+import { DragAndDrop } from "../components/DragAndDrop.js";
 import { MenuText } from "../components/MenuText.js";
 import { Order } from "../components/Order.js";
 import { PartOfContainer } from "../components/PartOfContainer.js";
 import { Position } from "../components/Position.js";
-import { Returnable } from "../components/Returnable.js";
 import { Size } from "../components/Size.js";
 import { Sprite } from "../components/Sprite.js";
 import { Zone } from "../components/Zone.js";
@@ -29,10 +26,7 @@ const makeOrder = (world, xPos, yPos) => {
   addComponent(world, Size, order1);
   Size.width[order1] = 32;
   Size.height[order1] = 12;
-  addComponent(world, Interactive, order1);
-  addComponent(world, Draggable, order1);
-  addComponent(world, Droppable, order1);
-  addComponent(world, Returnable, order1);
+  addComponent(world, DragAndDrop, order1);
 
   const speechBubble1 = addEntity(world);
   addComponent(world, Position, speechBubble1);
@@ -55,7 +49,7 @@ const makeOrder = (world, xPos, yPos) => {
   PartOfContainer.eid[orderText1] = order1;
 };
 
-export const createCustomerSystem = (scene, gameObjectById) => {
+export const createCustomerSystem = () => {
   const customerQuery = defineQuery([Customer]);
   const customerQueryEnter = enterQuery(customerQuery);
   return defineSystem((world) => {

@@ -2,22 +2,20 @@ import { addComponent, addEntity, createWorld } from "bitecs";
 import { Scene } from "phaser";
 import { Customer } from "../components/Customer.js";
 import { Position } from "../components/Position.js";
+import { Score } from "../components/Score.js";
 import { Size } from "../components/Size.js";
 import { Sprite } from "../components/Sprite.js";
 import { Zone } from "../components/Zone.js";
 import { createContainerSystem } from "../systems/ContainerSystem.js";
+import { createCookingSystem } from "../systems/CookingSystem.js";
 import { createCustomerSystem } from "../systems/CustomerSystem.js";
-import { createDragSystem } from "../systems/DragSystem.js";
-import { createDropSystem } from "../systems/DropSystem.js";
-import { createReturnSystem } from "../systems/ReturnSystem.js";
-import { createSetInteractiveSystem } from "../systems/SetInteractiveSystem.js";
+import { createOrderMovementSystem } from "../systems/OrderMovementSystem.js";
+import { createScoreSystem } from "../systems/ScoreSystem.js";
+import { createSkewerMovementSystem } from "../systems/SkewerMovementSystem.js";
 import { createSpriteSystem } from "../systems/SpriteSystem.js";
 import { createTextSystem } from "../systems/TextSystem.js";
+import { createTimeSystem } from "../systems/TimeSystem.js";
 import { createZoneSystem } from "../systems/ZoneSystem.js";
-import { createCookingSystem } from "../systems/CookingSystem.js";
-import { Score } from "../components/Score.js";
-import { MenuText } from "../components/MenuText.js";
-import { createScoreSystem } from "../systems/ScoreSystem.js";
 
 export class Main extends Scene {
   constructor() {
@@ -26,12 +24,14 @@ export class Main extends Scene {
 
   create() {
     // Create globals
-    this.world = createWorld();
-    this.world.time = {
-      then: performance.now(),
-    };
+    this.world = createWorld({
+      time: {
+        delta: 0,
+        then: performance.now(),
+      },
+    });
     this.gameObjectById = new Map();
-
+    this.menuMap = this.cache.json.get("menu");
     this.graphics = this.add.graphics({
       fillStyle: { color: 0x0000aa },
       lineStyle: { color: 0xaa0000 },
@@ -51,9 +51,6 @@ export class Main extends Scene {
     addComponent(this.world, Position, score);
     Position.x[score] = 2;
     Position.y[score] = -3;
-    addComponent(this.world, MenuText, score);
-    MenuText.item[score] = 0;
-    MenuText.field[score] = 0;
 
     // Make grill slot entities
     for (let i = 0; i < 256; i += 16) {
@@ -83,23 +80,31 @@ export class Main extends Scene {
     addComponent(this.world, Customer, customer);
 
     // Create Systems
+    this.timeSystem = createTimeSystem();
     this.containerSystem = createContainerSystem(this, this.gameObjectById);
     this.spriteSystem = createSpriteSystem(this, this.gameObjectById);
     this.textSystem = createTextSystem(this, this.gameObjectById);
     this.zoneSystem = createZoneSystem(this, this.gameObjectById);
-    this.interactiveSystem = createSetInteractiveSystem(
+    this.orderMovementSystem = createOrderMovementSystem(
       this,
       this.gameObjectById,
     );
-    this.dragSystem = createDragSystem(this, this.gameObjectById);
-    this.returnSystem = createReturnSystem(this, this.gameObjectById);
-    this.dropSystem = createDropSystem(this, this.gameObjectById);
-    this.customerSystem = createCustomerSystem(this, this.gameObjectById);
-    this.cookingSystem = createCookingSystem(this, this.gameObjectById);
-    this.scoreSystem = createScoreSystem(this.gameObjectById);
+    this.skewerMovementSystem = createSkewerMovementSystem(
+      this,
+      this.gameObjectById,
+    );
+    this.customerSystem = createCustomerSystem();
+    this.cookingSystem = createCookingSystem(
+      this,
+      this.menuMap,
+      this.gameObjectById,
+    );
+    this.scoreSystem = createScoreSystem(this, this.gameObjectById);
   }
 
-  update(t, dt) {
+  update() {
+    this.timeSystem(this.world);
+
     // GameObject-creating systems
     this.containerSystem(this.world);
     this.spriteSystem(this.world);
@@ -107,10 +112,8 @@ export class Main extends Scene {
     this.zoneSystem(this.world);
 
     // Drag and drop necessities
-    this.interactiveSystem(this.world);
-    this.dragSystem(this.world);
-    this.returnSystem(this.world);
-    this.dropSystem(this.world);
+    this.orderMovementSystem(this.world);
+    this.skewerMovementSystem(this.world);
 
     // Gameplay
     this.customerSystem(this.world);

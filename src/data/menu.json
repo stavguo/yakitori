@@ -1,10 +1,10 @@
 {
   "0": {
     "0": "momo",
-    "japanese": "もも",
-    "description": "chicken thigh",
-    "cookTime": 10000,
-    "burnTime": 5000
+    "1": "もも",
+    "2": "chicken thigh",
+    "3": 10000,
+    "4": 5000
   },
   "1": {
     "english": "mune",

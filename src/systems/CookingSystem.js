@@ -1,32 +1,32 @@
-import { defineQuery, defineSystem, removeEntity } from "bitecs";
-import { Cookable } from "../components/Cookable.js";
-import { Sprite } from "../components/Sprite.js";
+import { defineQuery, defineSystem, enterQuery, removeComponent } from "bitecs";
+import { Cooking } from "../components/Cooking.js";
+import { Skewer } from "../components/Skewer.js";
 
-export const createCookingSystem = (scene, gameObjectById) => {
-  const cookableQuery = defineQuery([Cookable, Sprite]);
-  let now;
+export const createCookingSystem = (scene, menuMap, gameObjectById) => {
+  const skewerQuery = defineQuery([Cooking, Skewer]);
+  const skewerQueryEnter = enterQuery(skewerQuery);
   return defineSystem((world) => {
-    const entered = cookableQuery(world);
-    for (let i = 0; i < entered.length; i++) {
-      const eid = entered[i];
+    skewerQueryEnter(world).forEach((eid) => {
       const container = gameObjectById.get(eid);
+      const raw = container.list.at(-1);
+      if (!Object.hasOwn(raw, "cookingDuration")) {
+        const { time } = world;
+        console.log(`started cooking at ${time.then}`);
+        raw.cookingDuration = 0;
+      }
+    });
+    skewerQuery(world).forEach((eid) => {
+      const container = gameObjectById.get(eid);
+      const raw = container.list.at(-1);
       const { time } = world;
-      // first iteration
-      if (i === 0) {
-        now = performance.now();
+      raw.cookingDuration += time.delta;
+      const durationToFade = menuMap[Skewer.type[eid]][3];
+      const alpha = Math.max(0, 1 - raw.cookingDuration / durationToFade);
+      raw.setAlpha(alpha);
+      if (raw.alpha === 0) {
+        removeComponent(world, Cooking, eid);
+        console.log(`finished cooking at ${time.then}`);
       }
-      const delta = now - time.then;
-      Cookable.currentTime[eid] -= delta;
-      if (Cookable.currentTime[eid] < 0) {
-        removeEntity(world, eid);
-      } else {
-        container.alpha = Cookable.currentTime[eid] / Cookable.totalTime[eid];
-      }
-      // last iteration
-      if (i === entered.length - 1) {
-        time.then = now;
-      }
-    }
-    return world;
+    });
   });
 };

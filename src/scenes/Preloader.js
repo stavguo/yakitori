@@ -30,6 +30,7 @@ export class Preloader extends Scene {
     this.load.image("skewer", "skewer.png");
     this.load.image("momo_raw", "momo_raw.png");
     this.load.image("momo_cooked", "momo_cooked.png");
+    this.load.image("momo_burnt", "momo_burnt.png");
     this.load.image("speech_bubble", "speech_bubble.png");
     this.load.image("crosshair", "crosshair.png");
     this.load.spritesheet("customer1", "customer_1_sheet.png", {

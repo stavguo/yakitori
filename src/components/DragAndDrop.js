@@ -1,3 +1,3 @@
 import { defineComponent, Types } from "bitecs";
 
-export const Interactive = defineComponent();
+export const DragAndDrop = defineComponent();
