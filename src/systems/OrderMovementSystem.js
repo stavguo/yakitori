@@ -18,7 +18,6 @@ import { Position } from "../components/Position.js";
 import { Size } from "../components/Size.js";
 import { Skewer } from "../components/Skewer.js";
 import { Sprite } from "../components/Sprite.js";
-import { Value } from "../components/Value.js";
 
 const createSkewer = (world, zoneId) => {
   const skewer1 = addEntity(world);
@@ -26,6 +25,7 @@ const createSkewer = (world, zoneId) => {
   addComponent(world, Cooking, skewer1);
   addComponent(world, Skewer, skewer1);
   Skewer.type[skewer1] = 0;
+  Skewer.completion[skewer1] = 0;
   Skewer.grillSlot[skewer1] = zoneId;
   addComponent(world, Position, skewer1);
   Position.x[skewer1] = Position.x[zoneId]; //24
@@ -33,8 +33,6 @@ const createSkewer = (world, zoneId) => {
   addComponent(world, Size, skewer1);
   Size.width[skewer1] = 16;
   Size.height[skewer1] = 80;
-  addComponent(world, Value, skewer1);
-  Value.amount[skewer1] = 100;
   addComponent(world, DragAndDrop, skewer1);
 
   const burnt = addEntity(world);

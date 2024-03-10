@@ -8,24 +8,40 @@ export const createCookingSystem = (scene, menuMap, gameObjectById) => {
   return defineSystem((world) => {
     skewerQueryEnter(world).forEach((eid) => {
       const container = gameObjectById.get(eid);
-      const raw = container.list.at(-1);
-      if (!Object.hasOwn(raw, "cookingDuration")) {
-        const { time } = world;
-        console.log(`started cooking at ${time.then}`);
-        raw.cookingDuration = 0;
+      if (!Object.hasOwn(container, "cookingDuration")) {
+        container.cookingDuration = 0;
       }
     });
     skewerQuery(world).forEach((eid) => {
       const container = gameObjectById.get(eid);
       const raw = container.list.at(-1);
+      const cooked = container.list.at(-2);
       const { time } = world;
-      raw.cookingDuration += time.delta;
-      const durationToFade = menuMap[Skewer.type[eid]][3];
-      const alpha = Math.max(0, 1 - raw.cookingDuration / durationToFade);
-      raw.setAlpha(alpha);
-      if (raw.alpha === 0) {
-        removeComponent(world, Cooking, eid);
-        console.log(`finished cooking at ${time.then}`);
+      container.cookingDuration += time.delta;
+      const durationToCook = menuMap[Skewer.type[eid]][3];
+      const durationToBurn = menuMap[Skewer.type[eid]][4];
+      if (raw.visible) {
+        const alpha = Math.max(
+          0,
+          1 - container.cookingDuration / durationToCook,
+        );
+        raw.setAlpha(alpha);
+        Skewer.completion[eid] = alpha > 0.05 ? 1 - alpha : 1;
+        if (raw.alpha === 0) {
+          container.cookingDuration = 0;
+          raw.setVisible(false);
+        }
+      } else {
+        const alpha = Math.max(
+          0,
+          1 - container.cookingDuration / durationToBurn,
+        );
+        cooked.setAlpha(alpha);
+        Skewer.completion[eid] = alpha > 0.95 ? 1 : alpha;
+        if (cooked.alpha === 0) {
+          cooked.setVisible(false);
+          removeComponent(world, Cooking, eid);
+        }
       }
     });
   });

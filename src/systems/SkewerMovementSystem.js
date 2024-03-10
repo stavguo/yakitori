@@ -16,7 +16,7 @@ import { Position } from "../components/Position.js";
 import { Skewer } from "../components/Skewer.js";
 import { UpdateScore } from "../components/UpdateScore.js";
 
-export const createSkewerMovementSystem = (scene, gameObjectById) => {
+export const createSkewerMovementSystem = (scene, menuMap, gameObjectById) => {
   const SkewerQuery = defineQuery([DragAndDrop, Skewer]);
   const SkewerQueryEnter = enterQuery(SkewerQuery);
   return defineSystem((world) => {
@@ -30,6 +30,7 @@ export const createSkewerMovementSystem = (scene, gameObjectById) => {
       gameObject.on("dragstart", () => {
         scene.children.bringToTop(gameObject);
         removeComponent(world, Cooking, eid);
+        console.log(Skewer.completion[eid]);
       });
       gameObject.on("drag", (_, dragX, dragY) => {
         Position.x[eid] = Math.trunc(dragX);
@@ -37,21 +38,22 @@ export const createSkewerMovementSystem = (scene, gameObjectById) => {
       });
       gameObject.on("drop", (_, target) => {
         if (hasComponent(world, Customer, target.name)) {
-          // Update Score
           addComponent(world, UpdateScore, target.name);
-          UpdateScore.value[target.name] = 100;
-          console.log(`
-            You gave customer #${target.name} their food!
-            End of demo.
-            `);
+          removeComponent(world, Occupied, Skewer.grillSlot[eid]);
+          UpdateScore.value[target.name] =
+            Math.round(
+              (Skewer.completion[eid] * menuMap[Skewer.type[eid]][5]) / 10,
+            ) * 10;
           removeEntity(world, eid);
         } else {
           if (!hasComponent(world, Occupied, target.name)) {
+            if (target.name != Skewer.grillSlot[eid]) {
+              removeComponent(world, Occupied, Skewer.grillSlot[eid]);
+            }
             Position.x[eid] = target.x;
             Position.y[eid] = target.y;
             addComponent(world, Cooking, eid);
             addComponent(world, Occupied, target.name);
-            removeComponent(world, Occupied, Skewer.grillSlot[eid]);
             // updating this skewer's spot comes last, need pointer to prev
             Skewer.grillSlot[eid] = target.name;
           }

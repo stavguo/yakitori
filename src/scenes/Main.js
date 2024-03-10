@@ -91,6 +91,7 @@ export class Main extends Scene {
     );
     this.skewerMovementSystem = createSkewerMovementSystem(
       this,
+      this.menuMap,
       this.gameObjectById,
     );
     this.customerSystem = createCustomerSystem();
